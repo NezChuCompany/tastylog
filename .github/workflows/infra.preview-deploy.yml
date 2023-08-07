@@ -39,8 +39,8 @@ jobs:
             - name: Configure AWS credential
               uses: aws-actions/configure-aws-credentials@v2
               with:
-                  aws-region: ${{ env.AWS_REGION }}
-                  role-to-assume: arn:aws:iam::932593692972:role/tastylog-dev-githubactions-iam-role
+#                  aws-region: ${{ env.AWS_REGION }}
+                  role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
             - name: Terraform init
               run: |
                     terraform init -no-color
