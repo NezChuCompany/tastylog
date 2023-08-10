@@ -38,7 +38,7 @@ jobs:
                     terraform fmt -check
             - name: AWS configure
               run: |
-                    aws configure set sts_regional_endpoints regional
+                    aws configure set sts_regional_endpoints legacy
             - name: Configure AWS credential
               uses: aws-actions/configure-aws-credentials@v2
               with:
