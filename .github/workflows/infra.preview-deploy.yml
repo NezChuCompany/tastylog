@@ -40,7 +40,7 @@ jobs:
               run: |
                     aws configure set sts_regional_endpoints legacy
             - name: Configure AWS credential
-              uses: aws-actions/configure-aws-credentials@v2
+              uses: aws-actions/configure-aws-credentials@v1
               with:
                   aws-region: ${{ env.AWS_REGION }}
                   role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
