@@ -36,7 +36,7 @@ jobs:
             - name: Terraform format
               run: |
                     terraform fmt -check
-            - name: AWS configure
+            - name: configure AWS credential
               run: |
                     aws configure set sts_regional_endpoints legacy
             - name: Configure AWS credential
