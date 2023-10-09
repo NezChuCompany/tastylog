@@ -19,7 +19,6 @@ env:
     TF_PROJECT: tastylog
     TF_ENVIRONMENT: dev
 
-
 defaults:
     run:
         shell: bash
@@ -29,6 +28,8 @@ jobs:
     preview:
         name: "Preview"
         runs-on: ubuntu-latest
+        outputs:
+           TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
@@ -52,6 +53,8 @@ jobs:
               run: |
                 terraform validate -no-color
             - name: Terraform plan
+              id: plan
+              continue-on-error: true
               run: |
                 terraform plan \
                   -var 'project=${{ env.TF_PROJECT }}' \
@@ -61,3 +64,34 @@ jobs:
                   -input=false \
                   -no-color \
                   -detailed-exitcode
+            - name: Slack notify
+              uses: slackapi/slack-github-action@v1.24.0
+              with :
+                channel-id: "CS6GA64CW"
+                payload: |
+                    {
+                        "attachments": [
+                            {
+                                "blocks": [
+                                    {
+                                        "type": "header",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Request for approval",
+                                            "emoji": true
+                                        }
+                                    },
+                                    {
+                                        "type": "section",
+                                        "block_id": "sectionBlockOnlyMrkdwn",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+              env:
+                  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
